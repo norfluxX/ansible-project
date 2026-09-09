@@ -1,0 +1,13 @@
+---
+- name: Install node exporter everywhere
+  hosts: all
+  become: true
+  roles:
+    - node_exporter
+
+- name: Configure Prometheus
+  hosts: monitoring
+  become: true
+  roles:
+    - prometheus
+    - grafana
