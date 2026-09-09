@@ -1,0 +1,34 @@
+---
+- name: Install UFW
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+
+- name: Allow SSH
+  community.general.ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Allow HTTP
+  community.general.ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+  when: inventory_hostname in groups['load_balancers']
+
+- name: Allow application ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop:
+    - '8000'
+    - '8001'
+    - '8002'
+  when: inventory_hostname in groups['app']
+
+- name: Enable firewall
+  community.general.ufw:
+    state: enabled
+    policy: deny
