@@ -17,20 +17,41 @@ The application is intentionally small so the focus stays on Ansible.
 
 ## UI Dashboard
 
-The project now includes a simple responsive Bootstrap dashboard under `ui/index.html`.
+The project includes a responsive Bootstrap dashboard under `ui/index.html` and the UI is wired to the live FastAPI APIs through Nginx.
 
 ![E-Commerce Platform Dashboard](docs/ui-dashboard.svg)
 
-The UI is intentionally frontend-only for now, with sample dashboard data. It is ready to be wired to the FastAPI services in a later phase.
+### UI capabilities
 
-To preview it locally, open `ui/index.html` in a browser, or serve the directory with any static web server:
+- Dashboard metrics loaded from Product, User and Order services
+- Product list from MySQL + **Add Product** form
+- User list from MySQL + **Add User** form
+- Order list from Redis + **Create Order** form
+- Monitoring links to Prometheus and Grafana
+- Same-origin API calls through Nginx, so no frontend framework or CORS configuration is required
+
+Run the complete local stack:
 
 ```bash
-cd ui
-python3 -m http.server 8080
+docker compose -f docker-compose.yml up --build
 ```
 
-Then visit `http://localhost:8080`.
+Then open `http://localhost:8080`.
+
+## API flow
+
+```text
+Browser
+  │
+  ▼
+Nginx :8080
+  ├── /                 → Bootstrap UI
+  ├── /products         → Product Service → MySQL
+  ├── /users            → User Service    → MySQL
+  └── /orders           → Order Service   → Redis
+```
+
+The UI does not talk directly to MySQL or Redis; all data operations go through the FastAPI services.
 
 ## Repository goals
 
@@ -67,6 +88,8 @@ curl http://localhost:8080/products
 curl http://localhost:8080/users
 curl http://localhost:8080/orders/health
 ```
+
+You can also exercise the UI by adding a product, adding a user, and creating an order from the dashboard.
 
 ## Ansible
 
