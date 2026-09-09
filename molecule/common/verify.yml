@@ -1,0 +1,20 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+  tasks:
+    - name: Check application user
+      ansible.builtin.getent:
+        database: passwd
+        key: ecommerce
+
+    - name: Check application directory
+      ansible.builtin.stat:
+        path: /opt/ecommerce
+      register: app_dir
+
+    - name: Assert application directory exists
+      ansible.builtin.assert:
+        that:
+          - app_dir.stat.exists
+          - app_dir.stat.isdir
