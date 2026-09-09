@@ -1,0 +1,7 @@
+.ansible/
+*.retry
+__pycache__/
+.molecule/
+secrets/vault.yml
+.vault-password-file
+.env
