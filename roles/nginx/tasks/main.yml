@@ -5,6 +5,31 @@
     state: present
     update_cache: true
 
+- name: Clone application repository for UI
+  ansible.builtin.git:
+    repo: https://github.com/norfluxX/ansible-project.git
+    dest: /opt/ecommerce/repo
+    version: main
+    update: true
+
+- name: Create UI document root
+  ansible.builtin.file:
+    path: /var/www/ecommerce
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Deploy Bootstrap UI
+  ansible.builtin.copy:
+    src: /opt/ecommerce/repo/ui/index.html
+    dest: /var/www/ecommerce/index.html
+    remote_src: true
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload Nginx
+
 - name: Render gateway configuration
   ansible.builtin.template:
     src: nginx.conf.j2
