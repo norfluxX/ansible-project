@@ -1,0 +1,25 @@
+---
+- name: Build product service image
+  community.docker.docker_image:
+    name: "{{ product_service_image }}"
+    source: build
+    build:
+      path: "{{ app_root }}/repo/services/product-service"
+    force_source: true
+  register: product_image
+
+- name: Run product service
+  community.docker.docker_container:
+    name: "{{ product_service_container }}"
+    image: "{{ product_service_image }}"
+    state: started
+    restart_policy: unless-stopped
+    recreate: "{{ product_image.changed }}"
+    published_ports:
+      - "8000:8000"
+    env:
+      SERVICE_NAME: product-service
+      MYSQL_HOST: "{{ hostvars[groups['databases'][0]].ansible_host }}"
+      MYSQL_DATABASE: "{{ mysql_database | default('ecommerce') }}"
+      MYSQL_USER: "{{ mysql_app_user | default('app') }}"
+      MYSQL_PASSWORD: "{{ mysql_app_password | default('change-me-with-vault') }}"
