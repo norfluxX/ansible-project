@@ -25,6 +25,17 @@
   roles:
     - redis
 
+- name: Prepare application source
+  hosts: app
+  become: true
+  tasks:
+    - name: Checkout application repository
+      ansible.builtin.git:
+        repo: "https://github.com/norfluxX/ansible-project.git"
+        dest: "{{ app_root }}/repo"
+        version: main
+        update: true
+
 - name: Deploy application services
   hosts: app
   become: true
