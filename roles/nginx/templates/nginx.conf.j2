@@ -19,9 +19,12 @@ upstream order_backend {
 server {
     listen {{ nginx_listen_port }};
     server_name _;
+    root /var/www/ecommerce;
+    index index.html;
 
     location /products { proxy_pass http://product_backend; }
     location /users { proxy_pass http://user_backend; }
     location /orders { proxy_pass http://order_backend; }
-    location /health { return 200 'gateway healthy\n'; }
+    location /health { return 200 'gateway healthy\n'; add_header Content-Type text/plain; }
+    location / { try_files $uri $uri/ /index.html; }
 }
