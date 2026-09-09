@@ -1,0 +1,19 @@
+---
+- name: Install Redis
+  ansible.builtin.apt:
+    name: redis-server
+    state: present
+    update_cache: true
+
+- name: Configure Redis for private network
+  ansible.builtin.lineinfile:
+    path: /etc/redis/redis.conf
+    regexp: '^bind '
+    line: 'bind 0.0.0.0 ::0'
+  notify: Restart Redis
+
+- name: Enable Redis
+  ansible.builtin.service:
+    name: redis-server
+    state: started
+    enabled: true
