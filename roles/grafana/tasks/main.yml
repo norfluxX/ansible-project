@@ -1,0 +1,14 @@
+---
+- name: Install Grafana prerequisites
+  ansible.builtin.apt:
+    name: grafana
+    state: present
+  register: grafana_install
+  failed_when: false
+
+- name: Enable Grafana
+  ansible.builtin.service:
+    name: grafana-server
+    state: started
+    enabled: true
+  when: not grafana_install.failed | default(false)
