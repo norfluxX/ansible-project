@@ -1,0 +1,22 @@
+---
+- name: Build order service image
+  community.docker.docker_image:
+    name: "{{ order_service_image }}"
+    source: build
+    build:
+      path: "{{ app_root }}/repo/services/order-service"
+    force_source: true
+  register: order_image
+
+- name: Run order service
+  community.docker.docker_container:
+    name: "{{ order_service_container }}"
+    image: "{{ order_service_image }}"
+    state: started
+    restart_policy: unless-stopped
+    recreate: "{{ order_image.changed }}"
+    published_ports:
+      - "8002:8000"
+    env:
+      SERVICE_NAME: order-service
+      REDIS_HOST: "{{ hostvars[groups['cache'][0]].ansible_host }}"
