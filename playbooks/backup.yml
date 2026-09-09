@@ -1,0 +1,25 @@
+---
+- name: Backup MySQL database
+  hosts: databases
+  become: true
+  vars:
+    backup_dir: /var/backups/ecommerce
+  tasks:
+    - name: Create backup directory
+      ansible.builtin.file:
+        path: "{{ backup_dir }}"
+        state: directory
+        mode: '0750'
+
+    - name: Dump database
+      community.mysql.mysql_db:
+        name: "{{ mysql_database | default('ecommerce') }}"
+        state: dump
+        target: "{{ backup_dir }}/{{ mysql_database | default('ecommerce') }}-{{ ansible_date_time.date }}.sql"
+      register: backup_result
+      run_once: true
+
+    - name: Report backup
+      ansible.builtin.debug:
+        var: backup_result
+      run_once: true
