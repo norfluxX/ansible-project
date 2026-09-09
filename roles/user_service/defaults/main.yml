@@ -1,0 +1,3 @@
+---
+user_service_image: ecommerce-user:1.0.0
+user_service_container: ecommerce-user
