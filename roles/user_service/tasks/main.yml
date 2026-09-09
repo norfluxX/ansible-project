@@ -1,0 +1,25 @@
+---
+- name: Build user service image
+  community.docker.docker_image:
+    name: "{{ user_service_image }}"
+    source: build
+    build:
+      path: "{{ app_root }}/repo/services/user-service"
+    force_source: true
+  register: user_image
+
+- name: Run user service
+  community.docker.docker_container:
+    name: "{{ user_service_container }}"
+    image: "{{ user_service_image }}"
+    state: started
+    restart_policy: unless-stopped
+    recreate: "{{ user_image.changed }}"
+    published_ports:
+      - "8001:8000"
+    env:
+      SERVICE_NAME: user-service
+      MYSQL_HOST: "{{ hostvars[groups['databases'][0]].ansible_host }}"
+      MYSQL_DATABASE: "{{ mysql_database | default('ecommerce') }}"
+      MYSQL_USER: "{{ mysql_app_user | default('app') }}"
+      MYSQL_PASSWORD: "{{ mysql_app_password | default('change-me-with-vault') }}"
