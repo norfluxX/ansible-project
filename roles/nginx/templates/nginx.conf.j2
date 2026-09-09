@@ -1,0 +1,27 @@
+upstream product_backend {
+{% for host in groups['app'] %}
+    server {{ hostvars[host].ansible_host }}:8000;
+{% endfor %}
+}
+
+upstream user_backend {
+{% for host in groups['app'] %}
+    server {{ hostvars[host].ansible_host }}:8000;
+{% endfor %}
+}
+
+upstream order_backend {
+{% for host in groups['app'] %}
+    server {{ hostvars[host].ansible_host }}:8000;
+{% endfor %}
+}
+
+server {
+    listen {{ nginx_listen_port }};
+    server_name _;
+
+    location /products { proxy_pass http://product_backend; }
+    location /users { proxy_pass http://user_backend; }
+    location /orders { proxy_pass http://order_backend; }
+    location /health { return 200 'gateway healthy\n'; }
+}
