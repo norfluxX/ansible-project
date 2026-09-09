@@ -1,0 +1,17 @@
+---
+project_name: ecommerce-platform
+app_user: ecommerce
+app_root: /opt/ecommerce
+compose_file: /opt/ecommerce/docker-compose.yml
+
+docker_packages:
+  - docker.io
+  - docker-compose-plugin
+
+service_images:
+  product_service: "product-service:1.0.0"
+  user_service: "user-service:1.0.0"
+  order_service: "order-service:1.0.0"
+
+health_retries: 12
+health_delay: 5
