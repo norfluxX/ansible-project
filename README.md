@@ -11,8 +11,26 @@ A practical enterprise-style Ansible project for deploying a small e-commerce pl
 - MySQL database
 - Redis cache
 - Prometheus + Grafana monitoring
+- Bootstrap web UI dashboard
 
 The application is intentionally small so the focus stays on Ansible.
+
+## UI Dashboard
+
+The project now includes a simple responsive Bootstrap dashboard under `ui/index.html`.
+
+![E-Commerce Platform Dashboard](docs/ui-dashboard.svg)
+
+The UI is intentionally frontend-only for now, with sample dashboard data. It is ready to be wired to the FastAPI services in a later phase.
+
+To preview it locally, open `ui/index.html` in a browser, or serve the directory with any static web server:
+
+```bash
+cd ui
+python3 -m http.server 8080
+```
+
+Then visit `http://localhost:8080`.
 
 ## Repository goals
 
@@ -34,6 +52,7 @@ This repository demonstrates:
 - Prometheus/Grafana configuration
 - backups and rollback
 - Molecule, ansible-lint and GitHub Actions
+- responsive Bootstrap UI
 
 ## Quick local application test
 
