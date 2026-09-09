@@ -1,0 +1,27 @@
+---
+- name: Install MySQL server
+  ansible.builtin.apt:
+    name: mysql-server
+    state: present
+    update_cache: true
+
+- name: Start MySQL
+  ansible.builtin.service:
+    name: mysql
+    state: started
+    enabled: true
+
+- name: Create application database
+  community.mysql.mysql_db:
+    name: "{{ mysql_database }}"
+    state: present
+  register: db_result
+  failed_when: db_result.failed | default(false)
+
+- name: Create application database user
+  community.mysql.mysql_user:
+    name: "{{ mysql_app_user }}"
+    password: "{{ mysql_app_password }}"
+    priv: "{{ mysql_database }}.*:ALL"
+    host: '%'
+    state: present
