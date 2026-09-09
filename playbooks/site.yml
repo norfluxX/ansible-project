@@ -1,0 +1,41 @@
+---
+- name: Baseline all managed nodes
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - common
+    - users
+
+- name: Install Docker on container hosts
+  hosts: docker_hosts
+  become: true
+  roles:
+    - docker
+
+- name: Configure database
+  hosts: databases
+  become: true
+  roles:
+    - mysql
+
+- name: Configure cache
+  hosts: cache
+  become: true
+  roles:
+    - redis
+
+- name: Deploy application services
+  hosts: app
+  become: true
+  serial: 1
+  roles:
+    - product_service
+    - user_service
+    - order_service
+
+- name: Configure load balancer
+  hosts: load_balancers
+  become: true
+  roles:
+    - nginx
