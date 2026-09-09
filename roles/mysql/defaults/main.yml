@@ -1,0 +1,5 @@
+---
+mysql_database: ecommerce
+mysql_app_user: app
+mysql_app_password: change-me-with-vault
+mysql_root_password: change-me-with-vault
