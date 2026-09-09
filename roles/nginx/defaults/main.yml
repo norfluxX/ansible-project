@@ -1,0 +1,5 @@
+---
+nginx_listen_port: 80
+nginx_app_servers:
+  - 192.168.56.21
+  - 192.168.56.22
