@@ -6,13 +6,13 @@ upstream product_backend {
 
 upstream user_backend {
 {% for host in groups['app'] %}
-    server {{ hostvars[host].ansible_host }}:8000;
+    server {{ hostvars[host].ansible_host }}:8001;
 {% endfor %}
 }
 
 upstream order_backend {
 {% for host in groups['app'] %}
-    server {{ hostvars[host].ansible_host }}:8000;
+    server {{ hostvars[host].ansible_host }}:8002;
 {% endfor %}
 }
 
