@@ -1,0 +1,3 @@
+---
+order_service_image: ecommerce-order:1.0.0
+order_service_container: ecommerce-order
